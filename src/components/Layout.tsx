@@ -3,6 +3,7 @@ import { Outlet } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 import { useEffect, useState } from 'react';
+import Navbar from './Navbar';
 
 const Layout = () => {
   const location = useLocation();
@@ -23,6 +24,7 @@ const Layout = () => {
 
   return (
     <div className="min-h-screen flex flex-col bg-background">
+      {showNavbar && <Navbar />}
       <main className="flex-1">
         <Outlet />
       </main>
