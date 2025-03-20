@@ -1,11 +1,34 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '@/contexts/AuthContext';
+import { Briefcase } from 'lucide-react';
 
 const Index = () => {
+  const { user, isLoading } = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!isLoading) {
+      if (user) {
+        // Redirect based on user role
+        if (user.role === 'admin') {
+          navigate('/admin');
+        } else {
+          navigate('/dashboard');
+        }
+      } else {
+        navigate('/login');
+      }
+    }
+  }, [user, isLoading, navigate]);
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-gray-600">Start building your amazing project here!</p>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-accent/30 to-background">
+      <div className="text-center animate-pulse-light">
+        <Briefcase className="h-16 w-16 text-primary mx-auto mb-4" />
+        <h1 className="text-3xl font-bold mb-2">HireFlux</h1>
+        <p className="text-xl text-muted-foreground">Loading...</p>
       </div>
     </div>
   );
