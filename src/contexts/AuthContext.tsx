@@ -8,6 +8,8 @@ export interface User {
   email: string;
   role: 'candidate' | 'admin';
   profileCompleted: boolean;
+  avatar?: string;
+  provider?: 'email' | 'google' | 'github';
 }
 
 interface AuthContextType {
@@ -16,6 +18,7 @@ interface AuthContextType {
   error: string | null;
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
+  socialLogin: (provider: 'google' | 'github') => Promise<void>;
   logout: () => void;
   updateUser: (userData: Partial<User>) => void;
 }
@@ -44,7 +47,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       email: 'admin@example.com',
       password: 'password',
       role: 'admin' as const,
-      profileCompleted: true
+      profileCompleted: true,
+      avatar: 'https://api.dicebear.com/6.x/avataaars/svg?seed=admin',
+      provider: 'email' as const
     },
     {
       id: '2',
@@ -52,7 +57,29 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       email: 'john@example.com',
       password: 'password',
       role: 'candidate' as const,
-      profileCompleted: false
+      profileCompleted: false,
+      avatar: 'https://api.dicebear.com/6.x/avataaars/svg?seed=john',
+      provider: 'email' as const
+    },
+    {
+      id: '3',
+      name: 'Google User',
+      email: 'google@example.com',
+      password: '',
+      role: 'candidate' as const,
+      profileCompleted: true,
+      avatar: 'https://api.dicebear.com/6.x/avataaars/svg?seed=google',
+      provider: 'google' as const
+    },
+    {
+      id: '4',
+      name: 'GitHub User',
+      email: 'github@example.com',
+      password: '',
+      role: 'candidate' as const,
+      profileCompleted: true, 
+      avatar: 'https://api.dicebear.com/6.x/avataaars/svg?seed=github',
+      provider: 'github' as const
     }
   ];
 
@@ -104,6 +131,56 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  const socialLogin = async (provider: 'google' | 'github') => {
+    setIsLoading(true);
+    setError(null);
+    
+    try {
+      // Simulate API call delay
+      await new Promise(resolve => setTimeout(resolve, 1200));
+      
+      // Find the mock user for the selected provider
+      const foundUser = mockUsers.find(user => user.provider === provider);
+      
+      if (foundUser) {
+        const { password, ...userWithoutPassword } = foundUser;
+        setUser(userWithoutPassword);
+        localStorage.setItem('jobPortalUser', JSON.stringify(userWithoutPassword));
+        toast({
+          title: "Login successful",
+          description: `Welcome, ${foundUser.name}!`,
+        });
+      } else {
+        // Create a new user if none exists (this is for demo purposes)
+        const newUser: User = {
+          id: `${mockUsers.length + 1}`,
+          name: `${provider.charAt(0).toUpperCase() + provider.slice(1)} User`,
+          email: `${provider}@example.com`,
+          role: 'candidate',
+          profileCompleted: true,
+          avatar: `https://api.dicebear.com/6.x/avataaars/svg?seed=${provider}`,
+          provider: provider
+        };
+        
+        setUser(newUser);
+        localStorage.setItem('jobPortalUser', JSON.stringify(newUser));
+        toast({
+          title: "Login successful",
+          description: `Welcome, ${newUser.name}!`,
+        });
+      }
+    } catch (error) {
+      setError((error as Error).message);
+      toast({
+        title: "Login failed",
+        description: "Could not authenticate with the provider",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const register = async (name: string, email: string, password: string) => {
     setIsLoading(true);
     setError(null);
@@ -123,7 +200,9 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         name,
         email,
         role: 'candidate',
-        profileCompleted: false
+        profileCompleted: false,
+        avatar: `https://api.dicebear.com/6.x/avataaars/svg?seed=${name.replace(/\s/g, '')}`,
+        provider: 'email'
       };
       
       setUser(newUser);
@@ -167,6 +246,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     error,
     login,
     register,
+    socialLogin,
     logout,
     updateUser
   };

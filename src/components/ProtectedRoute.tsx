@@ -22,15 +22,24 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     );
   }
 
+  // If not logged in, redirect to login page with the current location
   if (!user) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
+  // Check if user has required role
   if (requiredRole && user.role !== requiredRole) {
     return <Navigate to="/unauthorized" replace />;
   }
   
-  if (user.role === 'candidate' && !user.profileCompleted && location.pathname !== '/profile') {
+  // For candidate users, check if profile is completed
+  // Skip this check for the profile page and for admin users
+  if (
+    user.role === 'candidate' && 
+    !user.profileCompleted && 
+    location.pathname !== '/profile' &&
+    !location.pathname.startsWith('/admin')
+  ) {
     return <Navigate to="/profile" replace />;
   }
 
