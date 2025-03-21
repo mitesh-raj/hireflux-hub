@@ -1,4 +1,3 @@
-
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useToast } from "@/components/ui/use-toast";
 
@@ -10,6 +9,11 @@ export interface User {
   profileCompleted: boolean;
   avatar?: string;
   provider?: 'email' | 'google' | 'github';
+  resume?: {
+    name: string;
+    type: string;
+    url: string;
+  };
 }
 
 interface AuthContextType {
@@ -39,7 +43,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [error, setError] = useState<string | null>(null);
   const { toast } = useToast();
 
-  // Mock users for the demo
   const mockUsers = [
     {
       id: '1',
@@ -84,7 +87,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   ];
 
   useEffect(() => {
-    // Check for existing session
     const storedUser = localStorage.getItem('jobPortalUser');
     if (storedUser) {
       try {
@@ -101,7 +103,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setError(null);
     
     try {
-      // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 800));
       
       const foundUser = mockUsers.find(
@@ -136,10 +137,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setError(null);
     
     try {
-      // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1200));
       
-      // Find the mock user for the selected provider
       const foundUser = mockUsers.find(user => user.provider === provider);
       
       if (foundUser) {
@@ -151,7 +150,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
           description: `Welcome, ${foundUser.name}!`,
         });
       } else {
-        // Create a new user if none exists (this is for demo purposes)
         const newUser: User = {
           id: `${mockUsers.length + 1}`,
           name: `${provider.charAt(0).toUpperCase() + provider.slice(1)} User`,
@@ -186,7 +184,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setError(null);
     
     try {
-      // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 800));
       
       const emailExists = mockUsers.some(user => user.email === email);
