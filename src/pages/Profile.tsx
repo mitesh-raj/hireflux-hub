@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { useAuth } from '@/contexts/AuthContext';
 import { useToast } from '@/components/ui/use-toast';
@@ -13,7 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { User, Briefcase, GraduationCap, Award, MapPin, Clock, Github, Linkedin, FileText, AtSign, Phone } from 'lucide-react';
+import { User, Briefcase, GraduationCap, Award, MapPin, Clock, Github, Linkedin, FileText, AtSign, Phone, Building } from 'lucide-react';
 
 // Form schema for personal information
 const personalInfoSchema = z.object({
