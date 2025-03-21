@@ -1,8 +1,8 @@
 
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { jobsData } from '@/lib/constants';
-import { JOB_STATUS } from '@/lib/constants';
+import { jobsData } from '@/data/jobs';
+import { JOB_STATUS, JOB_APPLICATION_STATUS } from '@/lib/constants';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
