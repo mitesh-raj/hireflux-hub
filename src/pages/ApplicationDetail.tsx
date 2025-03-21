@@ -53,7 +53,7 @@ const ApplicationDetail = () => {
         return <Clock className="h-5 w-5 text-purple-500" />;
       case JOB_APPLICATION_STATUS.INTERVIEW:
         return <Calendar className="h-5 w-5 text-amber-500" />;
-      case JOB_APPLICATION_STATUS.OFFERED:
+      case JOB_APPLICATION_STATUS.OFFER:
         return <CheckCircle className="h-5 w-5 text-green-500" />;
       case JOB_APPLICATION_STATUS.REJECTED:
         return <AlertCircle className="h-5 w-5 text-red-500" />;
@@ -71,7 +71,7 @@ const ApplicationDetail = () => {
         return "bg-purple-100 text-purple-800";
       case JOB_APPLICATION_STATUS.INTERVIEW:
         return "bg-amber-100 text-amber-800";
-      case JOB_APPLICATION_STATUS.OFFERED:
+      case JOB_APPLICATION_STATUS.OFFER:
         return "bg-green-100 text-green-800";
       case JOB_APPLICATION_STATUS.REJECTED:
         return "bg-red-100 text-red-800";
