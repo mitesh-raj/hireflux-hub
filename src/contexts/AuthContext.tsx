@@ -1,3 +1,4 @@
+
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { useToast } from "@/components/ui/use-toast";
 
@@ -111,6 +112,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       
       if (foundUser) {
         const { password, ...userWithoutPassword } = foundUser;
+        console.log("User role during login:", userWithoutPassword.role); // Debug log
         setUser(userWithoutPassword);
         localStorage.setItem('jobPortalUser', JSON.stringify(userWithoutPassword));
         toast({

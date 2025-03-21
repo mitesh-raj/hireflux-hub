@@ -43,6 +43,15 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return <Navigate to="/profile" replace />;
   }
 
+  // For admin users, redirect to admin dashboard if they try to access candidate pages
+  if (
+    user.role === 'admin' &&
+    !location.pathname.startsWith('/admin') &&
+    location.pathname !== '/profile'
+  ) {
+    return <Navigate to="/admin" replace />;
+  }
+
   return <>{children}</>;
 };
 

@@ -11,7 +11,7 @@ const Layout = () => {
   const [mounted, setMounted] = useState(false);
   
   // Pages that don't need the navbar
-  const noNavbarPages = ['/login', '/register', '/unauthorized'];
+  const noNavbarPages = ['/login', '/register', '/unauthorized', '/'];
   const showNavbar = user && !noNavbarPages.includes(location.pathname);
 
   useEffect(() => {
