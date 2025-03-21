@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from 'react';
 import { NavLink, useNavigate, Link } from 'react-router-dom';
-import { Menu, X, Bell, User, Briefcase, UserCog, LogOut, Settings } from 'lucide-react';
+import { Menu, X, Bell, User, Briefcase, UserCog, LogOut, Settings, FileText } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -53,7 +53,7 @@ const Navbar = () => {
     : [
         { name: 'Dashboard', path: '/dashboard', icon: <Briefcase className="w-4 h-4 mr-2" /> },
         { name: 'Browse Jobs', path: '/jobs', icon: <Briefcase className="w-4 h-4 mr-2" /> },
-        { name: 'My Applications', path: '/applications', icon: <User className="w-4 h-4 mr-2" /> }
+        { name: 'My Applications', path: '/applications', icon: <FileText className="w-4 h-4 mr-2" /> }
       ];
 
   return (

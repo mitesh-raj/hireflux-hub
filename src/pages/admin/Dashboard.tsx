@@ -6,7 +6,7 @@ import { TabsContent, Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, LineChart, Line, CartesianGrid, Legend } from 'recharts';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Users, Briefcase, UserCheck, Building, TrendingUp, CalendarDays, FileCog, Activity } from 'lucide-react';
+import { Users, Briefcase, UserCheck, TrendingUp, CalendarDays, FileCog, Activity, Award, FileCheck, Zap } from 'lucide-react';
 
 const AdminDashboard = () => {
   const { user } = useAuth();
@@ -17,7 +17,7 @@ const AdminDashboard = () => {
     { id: 1, title: 'Total Jobs', value: 124, icon: <Briefcase className="h-5 w-5" />, change: '+12%', color: 'from-blue-500 to-blue-600' },
     { id: 2, title: 'Active Applicants', value: 1842, icon: <Users className="h-5 w-5" />, change: '+5%', color: 'from-purple-500 to-purple-600' },
     { id: 3, title: 'Placements', value: 64, icon: <UserCheck className="h-5 w-5" />, change: '+8%', color: 'from-green-500 to-green-600' },
-    { id: 4, title: 'Companies', value: 38, icon: <Building className="h-5 w-5" />, change: '+3%', color: 'from-amber-500 to-amber-600' },
+    { id: 4, title: 'Skills in Demand', value: 38, icon: <Award className="h-5 w-5" />, change: '+3%', color: 'from-amber-500 to-amber-600' },
   ];
   
   const applicationStatusData = [
@@ -49,10 +49,18 @@ const AdminDashboard = () => {
   ];
   
   const recentJobs = [
-    { id: 1, title: 'Senior Frontend Developer', company: 'TechCo Inc.', applicants: 52, postedDate: '2023-06-01', status: 'Active' },
-    { id: 2, title: 'UX Designer', company: 'DesignHub', applicants: 38, postedDate: '2023-06-03', status: 'Active' },
-    { id: 3, title: 'Data Scientist', company: 'AnalyticsPro', applicants: 27, postedDate: '2023-06-05', status: 'Active' },
-    { id: 4, title: 'Project Manager', company: 'ManagementPlus', applicants: 19, postedDate: '2023-06-07', status: 'Active' },
+    { id: 1, title: 'Senior Frontend Developer', department: 'Engineering', applicants: 52, postedDate: '2023-06-01', status: 'Active' },
+    { id: 2, title: 'UX Designer', department: 'Design', applicants: 38, postedDate: '2023-06-03', status: 'Active' },
+    { id: 3, title: 'Data Scientist', department: 'Data', applicants: 27, postedDate: '2023-06-05', status: 'Active' },
+    { id: 4, title: 'Project Manager', department: 'Operations', applicants: 19, postedDate: '2023-06-07', status: 'Active' },
+  ];
+
+  const recentApplications = [
+    { id: 1, name: 'Alex Johnson', position: 'Senior Frontend Developer', status: 'Interview', date: '2023-06-08', skills: ['React', 'TypeScript'] },
+    { id: 2, name: 'Maria Garcia', position: 'UX Designer', status: 'Review', date: '2023-06-07', skills: ['Figma', 'UI/UX'] },
+    { id: 3, name: 'David Kim', position: 'Data Scientist', status: 'Applied', date: '2023-06-06', skills: ['Python', 'ML'] },
+    { id: 4, name: 'Sarah Chen', position: 'Project Manager', status: 'Rejected', date: '2023-06-05', skills: ['Agile', 'Scrum'] },
+    { id: 5, name: 'James Wilson', position: 'Backend Developer', status: 'Interview', date: '2023-06-04', skills: ['Node.js', 'Express'] },
   ];
   
   return (
@@ -191,10 +199,10 @@ const AdminDashboard = () => {
             <Card className="border-none shadow-md mb-8">
               <CardHeader className="pb-2">
                 <CardTitle className="flex items-center justify-between">
-                  <span>Recent Job Postings</span>
-                  <Button size="sm" variant="outline" className="text-xs">View All</Button>
+                  <span>Job Listings</span>
+                  <Button size="sm" className="text-xs bg-blue-600 text-white hover:bg-blue-700">Add New Job</Button>
                 </CardTitle>
-                <CardDescription>Recent job listings and their statistics</CardDescription>
+                <CardDescription>Manage your job listings</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="overflow-x-auto">
@@ -202,7 +210,7 @@ const AdminDashboard = () => {
                     <thead>
                       <tr className="border-b">
                         <th className="py-3 px-4 text-left font-medium text-gray-500">Job Title</th>
-                        <th className="py-3 px-4 text-left font-medium text-gray-500">Company</th>
+                        <th className="py-3 px-4 text-left font-medium text-gray-500">Department</th>
                         <th className="py-3 px-4 text-left font-medium text-gray-500">Applicants</th>
                         <th className="py-3 px-4 text-left font-medium text-gray-500">Posted Date</th>
                         <th className="py-3 px-4 text-left font-medium text-gray-500">Status</th>
@@ -213,7 +221,7 @@ const AdminDashboard = () => {
                       {recentJobs.map((job) => (
                         <tr key={job.id} className="border-b hover:bg-gray-50">
                           <td className="py-3 px-4 font-medium">{job.title}</td>
-                          <td className="py-3 px-4">{job.company}</td>
+                          <td className="py-3 px-4">{job.department}</td>
                           <td className="py-3 px-4">{job.applicants}</td>
                           <td className="py-3 px-4">{new Date(job.postedDate).toLocaleDateString()}</td>
                           <td className="py-3 px-4">
@@ -230,35 +238,137 @@ const AdminDashboard = () => {
                 </div>
               </CardContent>
             </Card>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card className="border-none shadow-md">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-lg font-medium">Job Posting Performance</CardTitle>
+                  <CardDescription>View rates and statistics</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    <div className="p-4 border border-gray-100 rounded-lg">
+                      <div className="flex justify-between mb-2">
+                        <span className="font-medium">Application Rate</span>
+                        <span className="text-green-600 font-medium">+12%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2.5">
+                        <div className="bg-blue-600 h-2.5 rounded-full" style={{ width: '70%' }}></div>
+                      </div>
+                    </div>
+                    <div className="p-4 border border-gray-100 rounded-lg">
+                      <div className="flex justify-between mb-2">
+                        <span className="font-medium">Interview Conversion</span>
+                        <span className="text-green-600 font-medium">+8%</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2.5">
+                        <div className="bg-purple-600 h-2.5 rounded-full" style={{ width: '45%' }}></div>
+                      </div>
+                    </div>
+                    <div className="p-4 border border-gray-100 rounded-lg">
+                      <div className="flex justify-between mb-2">
+                        <span className="font-medium">Time to Fill</span>
+                        <span className="text-red-600 font-medium">+3 days</span>
+                      </div>
+                      <div className="w-full bg-gray-200 rounded-full h-2.5">
+                        <div className="bg-amber-500 h-2.5 rounded-full" style={{ width: '60%' }}></div>
+                      </div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="border-none shadow-md">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-lg font-medium">Quick Actions</CardTitle>
+                  <CardDescription>Common job posting tasks</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <Button className="h-auto py-4 bg-gradient-to-r from-blue-500 to-blue-600">
+                      <div className="flex flex-col items-center">
+                        <Briefcase className="h-6 w-6 mb-2" />
+                        <span>Create New Job</span>
+                      </div>
+                    </Button>
+                    <Button className="h-auto py-4 bg-gradient-to-r from-purple-500 to-purple-600">
+                      <div className="flex flex-col items-center">
+                        <FileCheck className="h-6 w-6 mb-2" />
+                        <span>Bulk Update</span>
+                      </div>
+                    </Button>
+                    <Button className="h-auto py-4 bg-gradient-to-r from-amber-500 to-amber-600">
+                      <div className="flex flex-col items-center">
+                        <FileCog className="h-6 w-6 mb-2" />
+                        <span>Job Templates</span>
+                      </div>
+                    </Button>
+                    <Button className="h-auto py-4 bg-gradient-to-r from-green-500 to-green-600">
+                      <div className="flex flex-col items-center">
+                        <Zap className="h-6 w-6 mb-2" />
+                        <span>Export Data</span>
+                      </div>
+                    </Button>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
           </TabsContent>
           
           {/* Candidates Tab */}
           <TabsContent value="candidates">
-            <div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
-              <Card className="border-none shadow-md col-span-1 xl:col-span-2">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+              <Card className="border-none shadow-md col-span-1 lg:col-span-2">
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-lg font-medium">Top Candidates</CardTitle>
-                  <CardDescription>Highest rated candidates in the system</CardDescription>
+                  <CardTitle className="flex items-center justify-between">
+                    <span>Recent Applications</span>
+                    <Button size="sm" className="text-xs" variant="outline">View All</Button>
+                  </CardTitle>
+                  <CardDescription>Latest candidates who applied</CardDescription>
                 </CardHeader>
                 <CardContent>
-                  <div className="space-y-4">
-                    {Array.from({ length: 5 }).map((_, index) => (
-                      <div key={index} className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                        <div className="flex items-center">
-                          <div className="h-10 w-10 rounded-full bg-gradient-to-r from-blue-400 to-indigo-500 flex items-center justify-center text-white font-medium">
-                            {String.fromCharCode(65 + index)}
-                          </div>
-                          <div className="ml-3">
-                            <h3 className="font-medium">Candidate Name {index + 1}</h3>
-                            <p className="text-sm text-gray-500">Software Developer</p>
-                          </div>
-                        </div>
-                        <div className="flex items-center">
-                          <Badge className="mr-2 bg-blue-100 text-blue-800">Top Skills</Badge>
-                          <Button size="sm" variant="outline" className="text-xs">View Profile</Button>
-                        </div>
-                      </div>
-                    ))}
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-sm">
+                      <thead>
+                        <tr className="border-b">
+                          <th className="py-3 px-4 text-left font-medium text-gray-500">Candidate</th>
+                          <th className="py-3 px-4 text-left font-medium text-gray-500">Position</th>
+                          <th className="py-3 px-4 text-left font-medium text-gray-500">Status</th>
+                          <th className="py-3 px-4 text-left font-medium text-gray-500">Date</th>
+                          <th className="py-3 px-4 text-left font-medium text-gray-500">Actions</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {recentApplications.map((app) => (
+                          <tr key={app.id} className="border-b hover:bg-gray-50">
+                            <td className="py-3 px-4">
+                              <div className="flex items-center">
+                                <div className="h-8 w-8 rounded-full bg-gradient-to-r from-blue-400 to-indigo-500 flex items-center justify-center text-white font-medium mr-2">
+                                  {app.name.charAt(0)}
+                                </div>
+                                <span className="font-medium">{app.name}</span>
+                              </div>
+                            </td>
+                            <td className="py-3 px-4">{app.position}</td>
+                            <td className="py-3 px-4">
+                              <Badge className={
+                                app.status === 'Interview' ? 'bg-green-100 text-green-800' :
+                                app.status === 'Review' ? 'bg-purple-100 text-purple-800' : 
+                                app.status === 'Applied' ? 'bg-blue-100 text-blue-800' :
+                                'bg-red-100 text-red-800'
+                              }>
+                                {app.status}
+                              </Badge>
+                            </td>
+                            <td className="py-3 px-4">{app.date}</td>
+                            <td className="py-3 px-4">
+                              <Button variant="ghost" size="sm" className="h-8 px-2 text-xs">View</Button>
+                              <Button variant="ghost" size="sm" className="h-8 px-2 text-xs">Contact</Button>
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
                   </div>
                 </CardContent>
               </Card>
@@ -270,22 +380,130 @@ const AdminDashboard = () => {
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-4">
-                    {Array.from({ length: 3 }).map((_, index) => (
-                      <div key={index} className="p-4 border border-gray-100 rounded-lg">
-                        <div className="flex items-center mb-2">
-                          <CalendarDays className="h-4 w-4 text-blue-500 mr-2" />
-                          <span className="text-sm font-medium text-gray-700">
-                            {new Date(Date.now() + (index + 1) * 24 * 60 * 60 * 1000).toLocaleDateString()}
-                          </span>
-                          <span className="ml-auto text-sm text-gray-500">
-                            {`${10 + index}:00 AM`}
-                          </span>
+                    {recentApplications
+                      .filter(app => app.status === 'Interview')
+                      .map((interview, index) => (
+                        <div key={interview.id} className="p-4 border border-gray-100 rounded-lg">
+                          <div className="flex items-center mb-2">
+                            <CalendarDays className="h-4 w-4 text-blue-500 mr-2" />
+                            <span className="text-sm font-medium text-gray-700">
+                              {new Date(interview.date).toLocaleDateString()}
+                            </span>
+                            <span className="ml-auto text-sm text-gray-500">
+                              {`${10 + index}:00 AM`}
+                            </span>
+                          </div>
+                          <h3 className="font-medium mb-1">{interview.name}</h3>
+                          <p className="text-sm text-gray-500 mb-2">{interview.position}</p>
+                          <div className="flex justify-between items-center">
+                            <div className="flex flex-wrap gap-1">
+                              {interview.skills.map((skill, idx) => (
+                                <Badge key={idx} className="bg-blue-50 text-blue-700 border border-blue-200">{skill}</Badge>
+                              ))}
+                            </div>
+                            <Button size="sm" variant="outline" className="text-xs">Reschedule</Button>
+                          </div>
                         </div>
-                        <h3 className="font-medium mb-1">Candidate Name {index + 1}</h3>
-                        <p className="text-sm text-gray-500 mb-2">Frontend Developer at TechCo Inc.</p>
-                        <div className="flex justify-between items-center">
-                          <Badge className="bg-purple-100 text-purple-800">Technical</Badge>
-                          <Button size="sm" variant="outline" className="text-xs">Reschedule</Button>
+                      ))}
+                    {!recentApplications.some(app => app.status === 'Interview') && (
+                      <div className="text-center py-8">
+                        <CalendarDays className="h-12 w-12 mx-auto text-gray-300 mb-3" />
+                        <p className="text-gray-600">No upcoming interviews</p>
+                      </div>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+            
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <Card className="border-none shadow-md">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-lg font-medium">Candidate Pipeline</CardTitle>
+                  <CardDescription>Overview of hiring process</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="relative pt-2">
+                    <div className="flex mb-8">
+                      <div className="flex-1 text-center">
+                        <div className="w-10 h-10 mx-auto rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mb-2">
+                          <Users className="h-5 w-5" />
+                        </div>
+                        <p className="text-sm font-medium">Applied</p>
+                        <p className="text-2xl font-bold text-blue-600">1245</p>
+                      </div>
+                      <div className="flex-1 text-center">
+                        <div className="w-10 h-10 mx-auto rounded-full bg-purple-100 text-purple-600 flex items-center justify-center mb-2">
+                          <FileCheck className="h-5 w-5" />
+                        </div>
+                        <p className="text-sm font-medium">Screened</p>
+                        <p className="text-2xl font-bold text-purple-600">876</p>
+                      </div>
+                      <div className="flex-1 text-center">
+                        <div className="w-10 h-10 mx-auto rounded-full bg-amber-100 text-amber-600 flex items-center justify-center mb-2">
+                          <CalendarDays className="h-5 w-5" />
+                        </div>
+                        <p className="text-sm font-medium">Interview</p>
+                        <p className="text-2xl font-bold text-amber-600">543</p>
+                      </div>
+                      <div className="flex-1 text-center">
+                        <div className="w-10 h-10 mx-auto rounded-full bg-green-100 text-green-600 flex items-center justify-center mb-2">
+                          <Award className="h-5 w-5" />
+                        </div>
+                        <p className="text-sm font-medium">Offered</p>
+                        <p className="text-2xl font-bold text-green-600">210</p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex mb-2">
+                      <div className="flex-1 px-2">
+                        <div className="h-2 bg-blue-500 rounded-l-full"></div>
+                      </div>
+                      <div className="flex-1 px-2">
+                        <div className="h-2 bg-purple-500"></div>
+                      </div>
+                      <div className="flex-1 px-2">
+                        <div className="h-2 bg-amber-500"></div>
+                      </div>
+                      <div className="flex-1 px-2">
+                        <div className="h-2 bg-green-500 rounded-r-full"></div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex text-xs text-gray-500">
+                      <div className="flex-1 text-center">100%</div>
+                      <div className="flex-1 text-center">70%</div>
+                      <div className="flex-1 text-center">44%</div>
+                      <div className="flex-1 text-center">17%</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="border-none shadow-md">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-lg font-medium">Top Skills in Demand</CardTitle>
+                  <CardDescription>Most requested abilities</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {[
+                      { skill: 'React.js', level: 85, count: 42 },
+                      { skill: 'TypeScript', level: 78, count: 38 },
+                      { skill: 'Node.js', level: 65, count: 31 },
+                      { skill: 'UI/UX Design', level: 60, count: 28 },
+                      { skill: 'Python', level: 55, count: 25 }
+                    ].map((item, index) => (
+                      <div key={index} className="space-y-2">
+                        <div className="flex justify-between">
+                          <span className="font-medium">{item.skill}</span>
+                          <span className="text-sm text-gray-500">{item.count} jobs</span>
+                        </div>
+                        <div className="w-full bg-gray-200 rounded-full h-2.5">
+                          <div
+                            className="bg-gradient-to-r from-blue-600 to-indigo-600 h-2.5 rounded-full"
+                            style={{ width: `${item.level}%` }}
+                          ></div>
                         </div>
                       </div>
                     ))}

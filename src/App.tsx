@@ -12,6 +12,7 @@ import ProtectedRoute from "@/components/ProtectedRoute";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Unauthorized from "@/pages/Unauthorized";
+import Index from "@/pages/Index";
 
 // User pages
 import Dashboard from "@/pages/Dashboard";
@@ -27,6 +28,11 @@ import ApplicationDetail from "@/pages/ApplicationDetail";
 import AdminDashboard from "@/pages/admin/Dashboard";
 import NotFound from "@/pages/NotFound";
 
+// Create admin pages components
+const AdminJobs = () => <div className="min-h-screen p-8 pt-24"><h1 className="text-3xl font-bold mb-4">Admin Jobs Management</h1><p>Content coming soon</p></div>;
+const AdminApplications = () => <div className="min-h-screen p-8 pt-24"><h1 className="text-3xl font-bold mb-4">Admin Applications Management</h1><p>Content coming soon</p></div>;
+const AdminSettings = () => <div className="min-h-screen p-8 pt-24"><h1 className="text-3xl font-bold mb-4">Admin Settings</h1><p>Content coming soon</p></div>;
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -39,6 +45,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<Layout />}>
               {/* Public routes */}
+              <Route index element={<Index />} />
               <Route path="login" element={<Login />} />
               <Route path="register" element={<Register />} />
               <Route path="unauthorized" element={<Unauthorized />} />
@@ -118,13 +125,27 @@ const App = () => (
                   </ProtectedRoute>
                 } 
               />
-              
-              {/* Redirect root to appropriate dashboard based on role */}
               <Route 
-                path="/" 
+                path="admin/jobs" 
                 element={
-                  <ProtectedRoute>
-                    <Dashboard />
+                  <ProtectedRoute requiredRole="admin">
+                    <AdminJobs />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="admin/applications" 
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <AdminApplications />
+                  </ProtectedRoute>
+                } 
+              />
+              <Route 
+                path="admin/settings" 
+                element={
+                  <ProtectedRoute requiredRole="admin">
+                    <AdminSettings />
                   </ProtectedRoute>
                 } 
               />
