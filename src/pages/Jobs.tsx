@@ -6,7 +6,7 @@ import { JOB_STATUS, JOB_APPLICATION_STATUS } from '@/lib/constants';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Briefcase, Building, MapPin, Calendar } from 'lucide-react';
+import { Briefcase, Building, MapPin, Calendar, Clock, FileText, BookOpen, GraduationCap } from 'lucide-react';
 
 const Jobs = () => {
   const [availableJobs, setAvailableJobs] = useState([]);
@@ -63,56 +63,65 @@ const Jobs = () => {
           </TabsList>
           
           <TabsContent value="available" className="space-y-6">
-            {availableJobs.map(job => (
-              <Card key={job.id} className="overflow-hidden border-none shadow-md bg-white/80 backdrop-blur-sm hover:shadow-lg transition-all">
-                <CardHeader className="pb-2 border-b border-purple-100">
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <CardTitle className="text-xl mb-1 text-purple-800">{job.title}</CardTitle>
-                      <CardDescription className="flex items-center text-gray-600">
-                        <Building className="h-4 w-4 mr-1 text-purple-400" />
-                        {job.company} 
-                        <span className="mx-2">•</span>
-                        <MapPin className="h-4 w-4 mr-1 text-purple-400" /> 
-                        {job.location}
-                      </CardDescription>
+            {availableJobs.length > 0 ? (
+              availableJobs.map(job => (
+                <Card key={job.id} className="overflow-hidden border-none shadow-md bg-white/90 backdrop-blur-sm hover:shadow-lg transition-all hover:translate-y-[-4px]">
+                  <CardHeader className="pb-2 border-b border-purple-100 bg-gradient-to-r from-purple-50 to-blue-50">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <CardTitle className="text-xl mb-1 text-purple-800">{job.title}</CardTitle>
+                        <CardDescription className="flex items-center text-gray-600">
+                          <Building className="h-4 w-4 mr-1 text-purple-400" />
+                          {job.company} 
+                          <span className="mx-2">•</span>
+                          <MapPin className="h-4 w-4 mr-1 text-purple-400" /> 
+                          {job.location}
+                        </CardDescription>
+                      </div>
+                      <Badge className="bg-gradient-to-r from-green-400 to-emerald-500 text-white border-none">
+                        {job.status}
+                      </Badge>
                     </div>
-                    <Badge className="bg-gradient-to-r from-green-400 to-emerald-500 text-white border-none">
-                      {job.status}
-                    </Badge>
-                  </div>
-                </CardHeader>
-                <CardContent className="pt-4">
-                  <p className="text-sm text-gray-600 mb-2">
-                    {job.description.substring(0, 150)}...
-                  </p>
-                  <div className="flex flex-wrap gap-2 mt-3">
-                    {job.skills.slice(0, 3).map((skill, index) => (
-                      <Badge key={index} variant="secondary" className="bg-purple-100 text-purple-700 border-purple-200">
-                        {skill}
-                      </Badge>
-                    ))}
-                    {job.skills.length > 3 && (
-                      <Badge variant="secondary" className="bg-blue-100 text-blue-700 border-blue-200">
-                        +{job.skills.length - 3} more
-                      </Badge>
-                    )}
-                  </div>
+                  </CardHeader>
+                  <CardContent className="pt-4">
+                    <p className="text-sm text-gray-600 mb-2">
+                      {job.description?.substring(0, 150)}...
+                    </p>
+                    <div className="flex flex-wrap gap-2 mt-3">
+                      {job.skills && job.skills.slice(0, 3).map((skill, index) => (
+                        <Badge key={index} variant="secondary" className="bg-purple-100 text-purple-700 border-purple-200">
+                          {skill}
+                        </Badge>
+                      ))}
+                      {job.skills && job.skills.length > 3 && (
+                        <Badge variant="secondary" className="bg-blue-100 text-blue-700 border-blue-200">
+                          +{job.skills.length - 3} more
+                        </Badge>
+                      )}
+                    </div>
+                  </CardContent>
+                  <CardFooter className="flex justify-between border-t border-purple-100 pt-4 bg-gradient-to-r from-purple-50 to-blue-50">
+                    <div className="flex items-center text-sm text-gray-500">
+                      <Calendar className="h-4 w-4 mr-1 text-purple-400" />
+                      Posted {new Date(job.postedDate).toLocaleDateString()}
+                    </div>
+                    <Link 
+                      to={`/jobs/${job.id}`}
+                      className="bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white px-6 py-2 rounded-full inline-block transform transition-transform hover:scale-105 shadow-md hover:shadow-lg"
+                    >
+                      View Details
+                    </Link>
+                  </CardFooter>
+                </Card>
+              ))
+            ) : (
+              <Card className="bg-white/80 backdrop-blur-sm border-none shadow-md">
+                <CardContent className="pt-6 text-center">
+                  <Briefcase className="h-12 w-12 mx-auto text-purple-300 mb-4" />
+                  <p className="text-gray-600">No available jobs found.</p>
                 </CardContent>
-                <CardFooter className="flex justify-between border-t border-purple-100 pt-4">
-                  <div className="flex items-center text-sm text-gray-500">
-                    <Calendar className="h-4 w-4 mr-1 text-purple-400" />
-                    Posted {new Date(job.postedDate).toLocaleDateString()}
-                  </div>
-                  <Link 
-                    to={`/jobs/${job.id}`}
-                    className="bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white px-6 py-2 rounded-full inline-block transform transition-transform hover:scale-105"
-                  >
-                    View Details
-                  </Link>
-                </CardFooter>
               </Card>
-            ))}
+            )}
           </TabsContent>
           
           <TabsContent value="applied" className="space-y-6">
@@ -128,8 +137,8 @@ const Jobs = () => {
               </Card>
             ) : (
               appliedJobs.map(job => (
-                <Card key={job.id} className="overflow-hidden border-none shadow-md bg-white/80 backdrop-blur-sm hover:shadow-lg transition-all">
-                  <CardHeader className="pb-2 border-b border-purple-100">
+                <Card key={job.id} className="overflow-hidden border-none shadow-md bg-white/90 backdrop-blur-sm hover:shadow-lg transition-all hover:translate-y-[-4px]">
+                  <CardHeader className="pb-2 border-b border-purple-100 bg-gradient-to-r from-purple-50 to-blue-50">
                     <div className="flex justify-between items-start">
                       <div>
                         <CardTitle className="text-xl mb-1 text-purple-800">{job.title}</CardTitle>
@@ -153,15 +162,17 @@ const Jobs = () => {
                     </div>
                   </CardHeader>
                   <CardContent className="pt-4">
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-600 flex items-center">
+                      <Calendar className="h-4 w-4 mr-1 text-purple-400" />
                       Applied on: {new Date(job.appliedDate).toLocaleDateString()}
                     </p>
                   </CardContent>
-                  <CardFooter className="flex justify-end border-t border-purple-100 pt-4">
+                  <CardFooter className="flex justify-end border-t border-purple-100 pt-4 bg-gradient-to-r from-purple-50 to-blue-50">
                     <Link 
                       to={`/applications/${job.id}`}
-                      className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-500 font-medium hover:underline"
+                      className="text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-blue-500 font-medium hover:underline flex items-center"
                     >
+                      <FileText className="h-4 w-4 mr-1" />
                       View Application
                     </Link>
                   </CardFooter>
