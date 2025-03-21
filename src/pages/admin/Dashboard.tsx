@@ -15,7 +15,7 @@ const AdminDashboard = () => {
   // Mock data for dashboard
   const jobStats = [
     { id: 1, title: 'Total Jobs', value: 124, icon: <Briefcase className="h-5 w-5" />, change: '+12%', color: 'from-blue-500 to-blue-600' },
-    { id: 2, title: 'Active Applicants', value: 1,842, icon: <Users className="h-5 w-5" />, change: '+5%', color: 'from-purple-500 to-purple-600' },
+    { id: 2, title: 'Active Applicants', value: 1842, icon: <Users className="h-5 w-5" />, change: '+5%', color: 'from-purple-500 to-purple-600' },
     { id: 3, title: 'Placements', value: 64, icon: <UserCheck className="h-5 w-5" />, change: '+8%', color: 'from-green-500 to-green-600' },
     { id: 4, title: 'Companies', value: 38, icon: <Building className="h-5 w-5" />, change: '+3%', color: 'from-amber-500 to-amber-600' },
   ];
