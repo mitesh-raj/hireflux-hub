@@ -64,7 +64,7 @@ const AdminDashboard = () => {
   ];
   
   return (
-    <div className="min-h-screen p-8 bg-gradient-to-br from-slate-50 via-white to-blue-50">
+    <div className="min-h-screen p-8 pt-24 bg-gradient-to-br from-slate-50 via-white to-blue-50">
       <div className="max-w-7xl mx-auto">
         <header className="flex items-center justify-between mb-8">
           <div>
