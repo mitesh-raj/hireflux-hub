@@ -12,7 +12,7 @@ import { Badge } from '@/components/ui/badge';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
-import { User, Briefcase, GraduationCap, Award, MapPin, Clock, Github, Linkedin, FileText, AtSign, Phone, Building } from 'lucide-react';
+import { User, Briefcase, GraduationCap, Award, MapPin, Clock, Github, Linkedin, FileText, AtSign, Phone, Building, Upload } from 'lucide-react';
 
 // Form schema for personal information
 const personalInfoSchema = z.object({
@@ -57,6 +57,8 @@ const Profile = () => {
   const { user, updateUser } = useAuth();
   const { toast } = useToast();
   const [activeTab, setActiveTab] = useState("personal");
+  const [resumeFile, setResumeFile] = useState<File | null>(null);
+  const [resumePreview, setResumePreview] = useState<string | null>(null);
   
   // Personal info form
   const personalForm = useForm({
@@ -190,7 +192,15 @@ const Profile = () => {
   };
   
   const handleCompleteProfile = () => {
-    updateUser({ profileCompleted: true });
+    updateUser({ 
+      profileCompleted: true,
+      resume: resumeFile ? {
+        name: resumeFile.name,
+        type: resumeFile.type,
+        // In a real app, this would be the URL from a file storage service
+        url: "resume-placeholder-url"
+      } : undefined
+    });
     
     toast({
       title: "Profile completed",
@@ -198,6 +208,48 @@ const Profile = () => {
     });
   };
   
+  const handleResumeUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      // Only accept PDF and DOC/DOCX files
+      if (file.type === 'application/pdf' || 
+          file.type === 'application/msword' || 
+          file.type === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+        
+        setResumeFile(file);
+        // Create a preview URL for PDF files
+        if (file.type === 'application/pdf') {
+          setResumePreview(URL.createObjectURL(file));
+        } else {
+          setResumePreview(null);
+        }
+        
+        toast({
+          title: "Resume uploaded",
+          description: `${file.name} has been uploaded successfully.`,
+        });
+      } else {
+        toast({
+          title: "Invalid file format",
+          description: "Please upload a PDF, DOC, or DOCX file.",
+          variant: "destructive",
+        });
+      }
+    }
+  };
+  
+  const handleRemoveResume = () => {
+    setResumeFile(null);
+    if (resumePreview) {
+      URL.revokeObjectURL(resumePreview);
+      setResumePreview(null);
+    }
+    toast({
+      title: "Resume removed",
+      description: "Your resume has been removed.",
+    });
+  };
+
   return (
     <div className="min-h-screen p-8 bg-gradient-to-br from-purple-50 via-white to-blue-50 pt-24">
       <div className="max-w-4xl mx-auto">
@@ -235,7 +287,7 @@ const Profile = () => {
         </div>
         
         <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="grid grid-cols-4 mb-8 bg-white/80 backdrop-blur-sm border border-purple-100 shadow-sm">
+          <TabsList className="grid grid-cols-5 mb-8 bg-white/80 backdrop-blur-sm border border-purple-100 shadow-sm">
             <TabsTrigger value="personal" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-blue-500 data-[state=active]:text-white">
               <User className="h-4 w-4 mr-2" />
               Personal
@@ -251,6 +303,10 @@ const Profile = () => {
             <TabsTrigger value="skills" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-blue-500 data-[state=active]:text-white">
               <Award className="h-4 w-4 mr-2" />
               Skills
+            </TabsTrigger>
+            <TabsTrigger value="resume" className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-purple-500 data-[state=active]:to-blue-500 data-[state=active]:text-white">
+              <FileText className="h-4 w-4 mr-2" />
+              Resume
             </TabsTrigger>
           </TabsList>
           
@@ -792,6 +848,87 @@ const Profile = () => {
                 </Button>
               </div>
             </div>
+          </TabsContent>
+          
+          {/* Resume Upload Tab */}
+          <TabsContent value="resume">
+            <Card className="border-none shadow-md mb-6">
+              <CardHeader>
+                <CardTitle className="text-xl text-purple-800">Resume Upload</CardTitle>
+                <CardDescription>Upload your resume to make it easy for employers to review your qualifications</CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="space-y-4">
+                  {!resumeFile ? (
+                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-12 text-center hover:bg-gray-50 transition-colors">
+                      <div className="flex flex-col items-center">
+                        <Upload className="h-12 w-12 text-gray-400 mb-3" />
+                        <h3 className="text-lg font-medium text-gray-900 mb-2">Upload your resume</h3>
+                        <p className="text-sm text-gray-500 mb-6">PDF, DOC, or DOCX files up to 5MB</p>
+                        <label htmlFor="resume-upload" className="relative cursor-pointer">
+                          <Button className="bg-gradient-to-r from-purple-600 to-blue-500 hover:from-purple-700 hover:to-blue-600 text-white">
+                            Browse Files
+                          </Button>
+                          <input
+                            id="resume-upload"
+                            name="resume-upload"
+                            type="file"
+                            className="sr-only"
+                            accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                            onChange={handleResumeUpload}
+                          />
+                        </label>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="rounded-lg border border-gray-200 bg-white overflow-hidden">
+                      <div className="p-6">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center">
+                            <div className="flex-shrink-0 bg-purple-100 rounded-lg p-3">
+                              <FileText className="h-8 w-8 text-purple-600" />
+                            </div>
+                            <div className="ml-4">
+                              <h3 className="text-lg font-medium text-gray-900">{resumeFile.name}</h3>
+                              <p className="text-sm text-gray-500">
+                                {(resumeFile.size / 1024 / 1024).toFixed(2)} MB • 
+                                {resumeFile.type === 'application/pdf' ? ' PDF' : 
+                                 resumeFile.type === 'application/msword' ? ' DOC' : ' DOCX'}
+                              </p>
+                            </div>
+                          </div>
+                          <div className="flex">
+                            {resumePreview && (
+                              <Button 
+                                variant="outline" 
+                                className="mr-2"
+                                onClick={() => window.open(resumePreview, '_blank')}
+                              >
+                                Preview
+                              </Button>
+                            )}
+                            <Button 
+                              variant="destructive"
+                              onClick={handleRemoveResume}
+                            >
+                              Remove
+                            </Button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </CardContent>
+              <CardFooter className="flex justify-end">
+                <Button 
+                  onClick={handleCompleteProfile}
+                  className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white"
+                >
+                  Complete Profile
+                </Button>
+              </CardFooter>
+            </Card>
           </TabsContent>
         </Tabs>
       </div>

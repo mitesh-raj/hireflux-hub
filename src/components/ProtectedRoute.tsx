@@ -27,8 +27,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Check if user has required role
-  if (requiredRole && user.role !== requiredRole) {
+  // Check if user has required role - admin users should have access to all pages
+  if (requiredRole && user.role !== requiredRole && user.role !== 'admin') {
     return <Navigate to="/unauthorized" replace />;
   }
   
